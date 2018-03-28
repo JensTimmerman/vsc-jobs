@@ -157,8 +157,7 @@ def mail_report(t, queued_jobs, running_jobs):
 
     message = """Dear admins,
 
-These are the jobs on belonging to users who have entered their grace period or have become inactive, as indicated by
-the LDAP replica on {master} at {time}.
+These are the jobs on belonging to users who have entered their grace period or have become inactive.
 
 {message_queued_jobs}
 
@@ -198,18 +197,17 @@ def main():
         now = datetime.datetime.utcnow()
         timestamp = now - datetime.timedelta(days=1)
         client = AccountpageClient(token=opts.options.access_token, url=opts.options.account_page_url + "/api/")
+        active_users, inactive_users = client.get_accounts()
 
-        candidate_users = [mkVscAccount(a) for a in client.account.modified[timestamp.strftime("%Y%m%d%H%M")].get()[1]]
 
         grace_users = []
-        for a in candidate_users:
+        for a in active_users:
             try:
                 if a.expiry_date and datetime.datetime.strptime(a.expiry_date, "%Y-%m-%d") - now < datetime.timedelta(days=7):
                     grace_users.append(a)
             except AttributeError as err:
-                logger.error("Account %s does not have expiry date", a.vsc_id)
+                logger.debug("Account %s does not have expiry date", a.vsc_id)
 
-        inactive_users = [a for a in candidate_users if a.status == INACTIVE]
 
         pbs_query = PBSQuery()
 

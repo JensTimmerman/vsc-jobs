@@ -22,15 +22,12 @@ vsc-jobs base distribution setup.py
 import vsc.install.shared_setup as shared_setup
 from vsc.install.shared_setup import ag, sdw, jt
 
-VERSION = '0.21.6'
+VERSION = '0.21.7'
 
 PACKAGE = {
     'version': VERSION,
     'author': [sdw, ag, jt],
     'maintainer': [sdw, ag, jt],
-    'setup_requires': [
-        'vsc-install >= 0.10.25',
-    ],
     'install_requires': [
         'lxml',
         # don't use installs from pbs-python from pypi
@@ -38,8 +35,7 @@ PACKAGE = {
         # or rpms
         # 'pbs_python >= 4.6',
         'vsc-administration >= 1.1.0',
-        'vsc-accountpage-clients >= 0.1.2',
-        'vsc-ldap >= 1.3.4',
+        'vsc-accountpage-clients >= 1.1.2',
         'vsc-utils >= 1.4.6',
         'lxml',
         # hack, work around unknown issue with defined dependency_links
